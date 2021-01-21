@@ -1,0 +1,23 @@
+{
+     "editor.tokenColorCustomizations": {
+          "textMateRules": [
+               {
+                    "scope": "meta.function-call.generic.python",
+                    "settings": {
+                         "foreground": "#00c2e4"
+                    }
+               }
+          ]
+     },
+     "bracketPairColorizer.consecutivePairColors": [
+          "()",
+          "[]",
+          "{}",
+          [
+               "Gold",
+               "Orchid",
+               "LightSkyBlue"
+          ],
+          "Red"
+     ]
+}

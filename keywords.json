@@ -1,0 +1,23 @@
+[
+     {
+          "title": "Web Development",
+          "keywords": [
+               "Junior front end developer",
+               "Junior back end developer",
+               "Junior full stack developer",
+               "Front-end developer",
+               "Back end developer",
+               "Full stack developer",
+               "Web developer"
+          ],
+          "exclude": [
+               "senior",
+               "ios",
+               "magento",
+               "asp.net",
+               "head",
+               "lead",
+               "specialist"
+          ]
+     }
+]
