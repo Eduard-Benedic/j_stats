@@ -10,8 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from UseDatabase import UseDatabase
 from VirtualUser import VirtualUser
 from Field import Field
-from bs4 import BeautifulSoup
-from HTMLParser import HTMLParser
+from HTMLExtractor import HTMLExtractor
 import copy
 import asyncio
 import json
@@ -32,6 +31,7 @@ class Page:
         self.driver = driver
         self.virtualUser = VirtualUser(self.driver)
         self.done = False
+        self.driver.maximize_window()
         self.driver.get(link)
         self.run()
 
@@ -79,13 +79,11 @@ class Page:
         element.click()
 
     def extractHTML(self):
-        soup = BeautifulSoup(self.driver.page_source, 'lxml')
-        job_preview_list = soup.find('article', id='MainCol').div.ul.contents
-        job_description = soup.find('div', id='JobDescriptionContainer')
+        self.virtualUser.wait.until(EC.presence_of_element_located((By.ID, "JDWrapper")))
+        page_source = self.driver.page_source
+        extractor = HTMLExtractor(page_source)
+        extractor.extract()
 
-        # for job in job_preview_list:
-        #     elementParser = HTMLParser(job)
-        #     elementParser.extract()
 
     def save_to_database(self, JobsData):
         for job in JobsData:
