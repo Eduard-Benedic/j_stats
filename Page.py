@@ -38,7 +38,29 @@ class Page:
     def run(self):
         self._do_setup()
         while self.done != True:
-            self.find_jobs()
+            self.navigate_to_searchable_state()
+            
+    def navigate_to_searchable_state(self):
+        self.perform_search()
+
+        jobs_list = self.driver.find_elements_by_xpath('//ul[contains(@class, "jlGrid")]/li')
+
+        once = True
+
+        for job in jobs_list:
+            link = job.find_element_by_xpath('.//div/a')
+            link.click()
+            if once:
+                self.do_once()
+                once = False
+            self.extractHTML()
+
+    def do_once(self):
+        try:
+            overlay = self.virtualUser.wait.until(lambda d: d.find_element_by_css_selector('.modal_closeIcon'))
+            overlay.click()
+        except:
+            print('overlay should be closed f')
 
     def _do_setup(self):
         self.virtualUser.do_gmail_login()
@@ -48,7 +70,7 @@ class Page:
             (locator['by'], locator['value'])))
         return element
 
-    def find_jobs(self):
+    def perform_search(self):
         keywordsElement = self._get_loading_element(
             {'by': By.ID, 'value': 'sc.keyword'})
         locationElement = self._get_loading_element(
@@ -59,8 +81,6 @@ class Page:
             {'by': By.CSS_SELECTOR, 'value': '.SearchStyles__newSearchButton'})
         self.virtualUser.perform_search(
             self.keywordsField, self.locationField, self.actionBtn)
-
-        self.extractHTML()
 
     def _get_element(self, selector):
         el = self.driver.find_element(selector['by'], selector['value'])
@@ -80,9 +100,11 @@ class Page:
 
     def extractHTML(self):
         self.virtualUser.wait.until(EC.presence_of_element_located((By.ID, "JDWrapper")))
+        self.virtualUser.wait.until(EC.presence_of_element_located((By.ID, "HeroHeaderModule")))
         page_source = self.driver.page_source
         extractor = HTMLExtractor(page_source)
-        extractor.extract()
+        fields = extractor.extract()
+        print(fields)
 
 
     def save_to_database(self, JobsData):
